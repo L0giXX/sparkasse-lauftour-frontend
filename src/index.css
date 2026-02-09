@@ -1,0 +1,54 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-body: 'Space Grotesk', system-ui, sans-serif;
+  --font-display: 'Fraunces', 'Times New Roman', serif;
+  --ink: #11121a;
+  --muted: #5b5f74;
+  --accent: #2870ed;
+  --accent-soft: #e5efff;
+  --surface: #f4f5fb;
+  --shadow-sm: 0 12px 30px rgba(17, 18, 26, 0.08);
+  --shadow-lg: 0 24px 60px rgba(17, 18, 26, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  background: #f6f3ef;
+}
+
+a {
+  text-decoration: none;
+}
+
+button,
+input {
+  font-family: inherit;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.hero-copy,
+.hero-card,
+.section,
+.footer {
+  animation: fadeUp 0.7s ease both;
+}
