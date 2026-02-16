@@ -1,30 +1,16 @@
 import { createContext, useContext, useMemo, useState } from 'react'
-
-type UserRole = 'runner' | 'admin'
-
-type User = {
-  name: string
-  role: UserRole
-}
-
-type AuthContextValue = {
-  user: User | null
-  token: string | null
-  expiresAt: number | null
-  login: (name: string, role: UserRole) => void
-  setSession: (args: { name: string; role: UserRole; token: string; expiresIn: number }) => void
-  logout: () => void
-}
+import type {
+  AuthContextValue,
+  AuthProviderProps,
+  AuthUser,
+  SessionArgs,
+  StoredSession,
+  UserRole,
+} from '../types'
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined)
 
 const STORAGE_KEY = 'lauftour_session'
-
-type StoredSession = {
-  user: User
-  token: string
-  expiresAt: number
-}
 
 const readStoredSession = (): StoredSession | null => {
   const raw = localStorage.getItem(STORAGE_KEY)
@@ -36,8 +22,8 @@ const readStoredSession = (): StoredSession | null => {
   }
 }
 
-export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const [user, setUser] = useState<User | null>(() => readStoredSession()?.user ?? null)
+export const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<AuthUser | null>(() => readStoredSession()?.user ?? null)
   const [token, setToken] = useState<string | null>(() => readStoredSession()?.token ?? null)
   const [expiresAt, setExpiresAt] = useState<number | null>(
     () => readStoredSession()?.expiresAt ?? null,
@@ -54,12 +40,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
   }
 
-  const setSession = (args: {
-    name: string
-    role: UserRole
-    token: string
-    expiresIn: number
-  }) => {
+  const setSession = (args: SessionArgs) => {
     const nextUser = { name: args.name, role: args.role }
     const nextExpiresAt = Date.now() + args.expiresIn * 1000
     setUser(nextUser)

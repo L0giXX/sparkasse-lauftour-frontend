@@ -1,54 +1,70 @@
-@import url('https://fonts.googleapis.com/css2?family=Fraunces:wght@400;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
 
 :root {
-  --font-body: 'Space Grotesk', system-ui, sans-serif;
-  --font-display: 'Fraunces', 'Times New Roman', serif;
-  --ink: #11121a;
-  --muted: #5b5f74;
-  --accent: #2870ed;
-  --accent-soft: #e5efff;
-  --surface: #f4f5fb;
-  --shadow-sm: 0 12px 30px rgba(17, 18, 26, 0.08);
-  --shadow-lg: 0 24px 60px rgba(17, 18, 26, 0.14);
+    --font-body: 'Space Grotesk', system-ui, sans-serif;
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --radius: 0.75rem;
+    --background: oklch(1 0 0);
+    --foreground: oklch(0.145 0 0);
+    --card: oklch(1 0 0);
+    --card-foreground: oklch(0.145 0 0);
+    --popover: oklch(1 0 0);
+    --popover-foreground: oklch(0.145 0 0);
+    --primary: #2870ed;
+    --primary-foreground: #ffffff;
+    --secondary: #ff6129;
+    --secondary-foreground: #ffffff;
+    --muted: oklch(0.97 0.01 255);
+    --muted-foreground: oklch(0.45 0.03 260);
+    --accent: oklch(0.93 0.03 35);
+    --accent-foreground: oklch(0.28 0.05 30);
+    --destructive: oklch(0.58 0.22 27);
+    --border: oklch(0.92 0.01 260);
+    --input: oklch(0.92 0.01 260);
+    --ring: #2870ed;
 }
 
-* {
-  box-sizing: border-box;
+@theme inline {
+    --radius-sm: calc(var(--radius) - 4px);
+    --radius-md: calc(var(--radius) - 2px);
+    --radius-lg: var(--radius);
+    --radius-xl: calc(var(--radius) + 4px);
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-popover: var(--popover);
+    --color-popover-foreground: var(--popover-foreground);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-secondary: var(--secondary);
+    --color-secondary-foreground: var(--secondary-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-accent: var(--accent);
+    --color-accent-foreground: var(--accent-foreground);
+    --color-destructive: var(--destructive);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-ring: var(--ring);
 }
 
-body {
-  margin: 0;
-  font-family: var(--font-body);
-  background: #f6f3ef;
-}
+@layer base {
+    * {
+        @apply border-border;
+    }
 
-a {
-  text-decoration: none;
-}
+    body {
+        @apply min-h-screen bg-background text-[18px] text-foreground antialiased;
+        font-family: var(--font-body), sans-serif;
+    }
 
-button,
-input {
-  font-family: inherit;
-}
-
-#root {
-  min-height: 100vh;
-}
-
-@keyframes fadeUp {
-  from {
-    opacity: 0;
-    transform: translateY(12px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-.hero-copy,
-.hero-card,
-.section,
-.footer {
-  animation: fadeUp 0.7s ease both;
+    h1, h2, h3, h4, h5, h6 {
+        font-family: inherit;
+        letter-spacing: 0;
+    }
 }

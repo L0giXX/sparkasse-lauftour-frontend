@@ -1,74 +1,82 @@
-import { Link } from 'react-router'
+import {Link} from 'react-router'
+import {Badge} from '@/components/ui/badge'
+import {Button} from '@/components/ui/button'
+import {Card, CardContent, CardHeader, CardTitle} from '@/components/ui/card'
 
 const Welcome = () => {
-  const nextEvents = [
-    { name: 'Stadtlauf am Fluss', date: '22.03.2026', distance: '10 km' },
-    { name: 'Frühlings-Trail', date: '05.04.2026', distance: '18 km' },
-    { name: 'Abendlauf City', date: '18.04.2026', distance: '5 km' },
-  ]
+    const nextEvents = [
+        {name: 'Stadtlauf am Fluss', date: '22.03.2026', distance: '10 km'},
+        {name: 'Frühlings-Trail', date: '05.04.2026', distance: '18 km'},
+        {name: 'Abendlauf City', date: '18.04.2026', distance: '5 km'},
+    ]
 
-  return (
-    <header className="hero">
-      <div className="hero-content">
-        <div className="hero-copy">
-          <p className="pill">Willkommen bei der Sparkassen Lauftour</p>
-          <h1>
-            Deine Laufreise in einer klaren Übersicht. Events, Fortschritt und
-            Geschenke auf einen Blick.
-          </h1>
-          <p className="lead">
-            Für Läufer: Übersicht über absolvierte Events, Laufdaten und
-            Serien. Für die Sparkasse: klare Qualifikationslisten für kleine
-            und große Geschenke.
-          </p>
-          <div className="hero-actions">
-            <Link className="btn primary" to="/benutzer">
-              Jetzt registrieren
-            </Link>
-            <Link className="btn secondary" to="/admin">
-              Als Admin anmelden
-            </Link>
-          </div>
-          <div className="hero-meta">
-            <div>
-              <span className="meta-value">2.480</span>
-              <span className="meta-label">aktive Läufer</span>
-            </div>
-            <div>
-              <span className="meta-value">34</span>
-              <span className="meta-label">Events im Jahr</span>
-            </div>
-            <div>
-              <span className="meta-value">8.920</span>
-              <span className="meta-label">Gesammelte Läufe</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="hero-card">
-          <div className="card-header">
-            <span>Qualifikationsstatus</span>
-            <strong>Aktuell</strong>
-          </div>
-          <div className="progress">
-            <div className="progress-bar" style={{ width: '68%' }} />
-          </div>
-          <p className="progress-text">17 von 25 Events bis zum großen Geschenk</p>
-          <div className="event-list">
-            {nextEvents.map((event) => (
-              <div className="event-row" key={event.name}>
-                <div>
-                  <p className="event-name">{event.name}</p>
-                  <p className="event-date">{event.date}</p>
+    return (
+        <section className="grid gap-8 pb-8 md:grid-cols-2 md:items-start">
+            <div className="space-y-6">
+                <Badge variant="secondary" className="rounded-full px-4 py-1 text-sm">
+                    Willkommen bei der Sparkassen Lauftour
+                </Badge>
+                <h1 className="text-4xl leading-tight md:text-5xl">
+                    Deine Laufreise in einer klaren Übersicht.
+                </h1>
+                <p className="max-w-2xl text-lg text-muted-foreground">
+                    Für Läufer: Überblick über absolvierte Events und Fortschritt. Für die
+                    Sparkasse: klare Qualifikationslisten für kleine und große Geschenke.
+                </p>
+                <div className="flex flex-wrap gap-3">
+                    <Link to="/benutzer">
+                        <Button variant={"default"}>Jetzt registrieren</Button>
+                    </Link>
+                    <Link to="/admin">
+                        <Button variant={"secondary"}>Jetzt anmelden</Button>
+                    </Link>
                 </div>
-                <span className="event-distance">{event.distance}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-    </header>
-  )
+                <div className="grid gap-4 sm:grid-cols-3">
+                    <Stat label="aktive Läufer" value="2.480"/>
+                    <Stat label="Events im Jahr" value="34"/>
+                    <Stat label="Gesammelte Läufe" value="8.920"/>
+                </div>
+            </div>
+
+            <Card className="border-foreground/10 bg-card/95 shadow-xl">
+                <CardHeader className="flex-row items-center justify-between space-y-0">
+                    <CardTitle className="text-xl">Qualifikationsstatus</CardTitle>
+                    <Badge variant="outline">Aktuell</Badge>
+                </CardHeader>
+                <CardContent className="space-y-5">
+                    <div className="h-2 overflow-hidden rounded-full bg-muted">
+                        <div className="h-full w-[68%] bg-gradient-to-r from-primary to-orange-400"/>
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        17 von 25 Events bis zum großen Geschenk
+                    </p>
+                    <div className="space-y-3">
+                        {nextEvents.map((event) => (
+                            <div
+                                key={event.name}
+                                className="flex items-center justify-between rounded-lg border bg-muted/40 px-3 py-2"
+                            >
+                                <div>
+                                    <p className="font-medium">{event.name}</p>
+                                    <p className="text-sm text-muted-foreground">{event.date}</p>
+                                </div>
+                                <Badge variant="secondary">{event.distance}</Badge>
+                            </div>
+                        ))}
+                    </div>
+                </CardContent>
+            </Card>
+        </section>
+    )
 }
+
+const Stat = ({label, value}: { label: string; value: string }) => (
+    <Card className="bg-background/80">
+        <CardContent className="space-y-1 p-4">
+            <p className="text-2xl font-semibold">{value}</p>
+            <p className="text-sm text-muted-foreground">{label}</p>
+        </CardContent>
+    </Card>
+)
 
 export default Welcome

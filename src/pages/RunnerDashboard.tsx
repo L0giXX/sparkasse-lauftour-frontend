@@ -1,3 +1,9 @@
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import type { ReactNode } from 'react'
+
 const RunnerDashboard = () => {
   const stats = [
     { label: 'Events 2025', value: '12' },
@@ -13,96 +19,119 @@ const RunnerDashboard = () => {
   ]
 
   return (
-    <section className="section">
-      <div className="section-header">
-        <h2>Dashboard für Läufer</h2>
-        <p>Alle Laufdaten, Events und Einstellungen an einem Ort.</p>
+    <section className="space-y-8">
+      <div className="space-y-2">
+        <h2 className="text-3xl md:text-4xl">Dashboard für Läufer</h2>
+        <p className="text-muted-foreground">
+          Alle Laufdaten, Events und Einstellungen an einem Ort.
+        </p>
       </div>
-      <div className="grid four">
+
+      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {stats.map((stat) => (
-          <div className="card stat" key={stat.label}>
-            <span className="stat-label">{stat.label}</span>
-            <span className="stat-value">{stat.value}</span>
-          </div>
+          <Card key={stat.label}>
+            <CardContent className="space-y-1 p-5">
+              <p className="text-sm font-medium text-muted-foreground">{stat.label}</p>
+              <p className="text-2xl font-semibold">{stat.value}</p>
+            </CardContent>
+          </Card>
         ))}
       </div>
 
-      <div className="grid two">
-        <div className="card panel">
-          <h3>Laufdaten</h3>
-          <div className="metrics">
-            <div>
-              <span>Durchschnittliche Pace</span>
-              <strong>5:12 min/km</strong>
-            </div>
-            <div>
-              <span>Beste 10 km Zeit</span>
-              <strong>48:30</strong>
-            </div>
-            <div>
-              <span>Letzter Lauf</span>
-              <strong>08.02.2026 • 7 km</strong>
-            </div>
-          </div>
-          <button className="btn ghost">Laufdaten aktualisieren</button>
-        </div>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Laufdaten</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <Metric label="Durchschnittliche Pace" value="5:12 min/km" />
+            <Metric label="Beste 10 km Zeit" value="48:30" />
+            <Metric label="Letzter Lauf" value="08.02.2026 • 7 km" />
+            <Button variant="outline">Laufdaten aktualisieren</Button>
+          </CardContent>
+        </Card>
 
-        <div className="card panel">
-          <h3>Bisherige Teilnahme an Events</h3>
-          <div className="table">
+        <Card>
+          <CardHeader>
+            <CardTitle>Bisherige Teilnahme an Events</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-3">
             {pastEvents.map((event) => (
-              <div className="table-row" key={event.name}>
+              <div
+                key={event.name}
+                className="grid items-center gap-2 rounded-lg border bg-muted/40 p-3 sm:grid-cols-[1fr_auto_auto]"
+              >
                 <div>
-                  <p className="event-name">{event.name}</p>
-                  <p className="event-date">{event.date}</p>
+                  <p className="font-medium">{event.name}</p>
+                  <p className="text-sm text-muted-foreground">{event.date}</p>
                 </div>
-                <span>{event.distance}</span>
-                <span className="badge">{event.points} Punkte</span>
+                <span className="text-sm font-medium">{event.distance}</span>
+                <Badge variant="secondary">{event.points} Punkte</Badge>
               </div>
             ))}
-          </div>
-          <button className="btn secondary">Event hinzufügen</button>
-        </div>
+            <Button variant="secondary">Event hinzufügen</Button>
+          </CardContent>
+        </Card>
       </div>
 
-      <div className="grid two">
-        <div className="card panel">
-          <h3>Persönliche Anmeldedaten verändern</h3>
-          <label>
-            Kontakt-E-Mail
-            <input type="email" placeholder="lauf@beispiel.de" />
-          </label>
-          <label>
-            Verein
-            <input type="text" placeholder="Lauftreff Innenstadt" />
-          </label>
-          <label>
-            Notfallkontakt
-            <input type="text" placeholder="+49 170 123 4567" />
-          </label>
-          <button className="btn primary full">Änderungen speichern</button>
-        </div>
-        <div className="card panel highlight">
-          <h3>Qualifikation für Geschenke</h3>
-          <p>
-            Aktuell qualifiziert für das <strong>kleine Geschenk</strong>. Noch
-            8 Events bis zum großen Geschenk.
-          </p>
-          <div className="gift-grid">
-            <div>
-              <span className="gift-label">Kleines Geschenk</span>
-              <span className="gift-status active">Erreicht</span>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Persönliche Anmeldedaten verändern</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <FormField label="Kontakt-E-Mail">
+              <Input type="email" placeholder="lauf@beispiel.de" />
+            </FormField>
+            <FormField label="Verein">
+              <Input type="text" placeholder="Lauftreff Innenstadt" />
+            </FormField>
+            <FormField label="Notfallkontakt">
+              <Input type="text" placeholder="+49 170 123 4567" />
+            </FormField>
+            <Button className="w-full">Änderungen speichern</Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-primary/20 bg-gradient-to-br from-orange-50 to-blue-50">
+          <CardHeader>
+            <CardTitle>Qualifikation für Geschenke</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-sm text-muted-foreground">
+              Aktuell qualifiziert für das <strong>kleine Geschenk</strong>. Noch
+              8 Events bis zum großen Geschenk.
+            </p>
+            <div className="space-y-3 rounded-lg border bg-background/80 p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Kleines Geschenk</span>
+                <Badge>Erreicht</Badge>
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-muted-foreground">Großes Geschenk</span>
+                <Badge variant="outline">In Arbeit</Badge>
+              </div>
             </div>
-            <div>
-              <span className="gift-label">Großes Geschenk</span>
-              <span className="gift-status">In Arbeit</span>
-            </div>
-          </div>
-          <button className="btn ghost">Details ansehen</button>
-        </div>
+            <Button variant="outline">Details ansehen</Button>
+          </CardContent>
+        </Card>
       </div>
     </section>
   )
 }
+
+const Metric = ({ label, value }: { label: string; value: string }) => (
+  <div className="rounded-lg border bg-muted/30 p-3">
+    <p className="text-sm text-muted-foreground">{label}</p>
+    <p className="text-lg font-semibold">{value}</p>
+  </div>
+)
+
+const FormField = ({ label, children }: { label: string; children: ReactNode }) => (
+  <label className="block space-y-1.5">
+    <span className="text-sm font-medium">{label}</span>
+    {children}
+  </label>
+)
 
 export default RunnerDashboard

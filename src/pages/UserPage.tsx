@@ -1,20 +1,12 @@
 import { useState } from 'react'
+import type { ReactNode } from 'react'
 import { useNavigate } from 'react-router'
 import { useForm } from 'react-hook-form'
 import { useAuth } from '../auth/AuthContext'
-
-type LoginForm = {
-  email: string
-  password: string
-}
-
-type RegisterForm = {
-  email: string
-  password: string
-  firstName: string
-  lastName: string
-  birthDate: string
-}
+import type { LoginForm, RegisterForm } from '../types'
+import { Button } from '@/components/ui/button'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
 
 const toIsoDate = (value: string) => {
   if (!value) return value
@@ -98,8 +90,7 @@ const UserPage = () => {
 
       const result = await response.json().catch(() => ({}))
       const token = typeof result?.token === 'string' ? result.token : ''
-      const expiresIn =
-        typeof result?.expiresIn === 'number' ? result.expiresIn : 0
+      const expiresIn = typeof result?.expiresIn === 'number' ? result.expiresIn : 0
       if (!token || !expiresIn) {
         throw new Error('Ungültige Antwort vom Server.')
       }
@@ -113,9 +104,7 @@ const UserPage = () => {
       setLoginSuccess('Erfolgreich angemeldet. Weiterleitung...')
       navigate('/dashboard')
     } catch (error) {
-      setLoginError(
-        error instanceof Error ? error.message : 'Anmeldung fehlgeschlagen.',
-      )
+      setLoginError(error instanceof Error ? error.message : 'Anmeldung fehlgeschlagen.')
     }
   }
 
@@ -135,18 +124,14 @@ const UserPage = () => {
       })
 
       if (!response.ok) {
-        const fallback =
-          response.status === 409
-            ? 'E-Mail existiert bereits.'
-            : 'Registrierung fehlgeschlagen.'
+        const fallback = response.status === 409 ? 'E-Mail existiert bereits.' : 'Registrierung fehlgeschlagen.'
         const message = await resolveErrorMessage(response, fallback)
         throw new Error(message)
       }
 
       const result = await response.json().catch(() => ({}))
       const token = typeof result?.token === 'string' ? result.token : ''
-      const expiresIn =
-        typeof result?.expiresIn === 'number' ? result.expiresIn : 0
+      const expiresIn = typeof result?.expiresIn === 'number' ? result.expiresIn : 0
       if (!token || !expiresIn) {
         throw new Error('Ungültige Antwort vom Server.')
       }
@@ -167,139 +152,135 @@ const UserPage = () => {
   }
 
   return (
-    <section className="section">
-      <div className="section-header">
-        <h2>Benutzerseite</h2>
-        <p>Anmeldung oder Registrierung mit klarer Trennung der Nutzerrollen.</p>
-        <p className="hint">Zugriff auf das Dashboard nur nach Anmeldung.</p>
+    <section className="space-y-8">
+      <div className="space-y-2">
+        <h2 className="text-3xl md:text-4xl">Benutzerseite</h2>
+        <p className="max-w-2xl text-muted-foreground">
+          Anmeldung oder Registrierung mit klarer Trennung der Nutzerrollen.
+        </p>
       </div>
-      <div className="grid two">
-        <form className="card panel" onSubmit={handleLoginSubmit(handleLogin)}>
-          <h3>Anmeldung</h3>
-          <label>
-            E-Mail
-            <input
-              type="email"
-              placeholder="name@beispiel.de"
-              {...registerLogin('email', { required: 'E-Mail ist erforderlich' })}
-            />
-            {loginErrors.email && (
-              <span className="form-error">{loginErrors.email.message}</span>
-            )}
-          </label>
-          <label>
-            Passwort
-            <input
-              type="password"
-              placeholder="••••••••"
-              {...registerLogin('password', {
-                required: 'Passwort ist erforderlich',
-                minLength: { value: 3, message: 'Mindestens 3 Zeichen' },
-              })}
-            />
-            {loginErrors.password && (
-              <span className="form-error">{loginErrors.password.message}</span>
-            )}
-          </label>
-          <button
-            className="btn primary full"
-            type="submit"
-            disabled={!loginValid || loginSubmitting}
-          >
-            {loginSubmitting ? 'Anmelden...' : 'Einloggen'}
-          </button>
-          {loginSuccess && <p className="form-success">{loginSuccess}</p>}
-          {loginError && <p className="form-error">{loginError}</p>}
-          <p className="hint">Passwort vergessen? Zurücksetzen.</p>
-        </form>
-        <form
-          className="card panel"
-          onSubmit={handleRegisterSubmit(handleRegister)}
-        >
-          <h3>Registrierung</h3>
-          <label>
-            Vorname
-            <input
-              type="text"
-              placeholder="Vorname"
-              {...registerRegister('firstName', {
-                required: 'Vorname ist erforderlich',
-              })}
-            />
-            {registerErrors.firstName && (
-              <span className="form-error">{registerErrors.firstName.message}</span>
-            )}
-          </label>
-          <label>
-            Nachname
-            <input
-              type="text"
-              placeholder="Nachname"
-              {...registerRegister('lastName', {
-                required: 'Nachname ist erforderlich',
-              })}
-            />
-            {registerErrors.lastName && (
-              <span className="form-error">{registerErrors.lastName.message}</span>
-            )}
-          </label>
-          <label>
-            E-Mail
-            <input
-              type="email"
-              placeholder="name@beispiel.de"
-              {...registerRegister('email', { required: 'E-Mail ist erforderlich' })}
-            />
-            {registerErrors.email && (
-              <span className="form-error">{registerErrors.email.message}</span>
-            )}
-          </label>
-          <label>
-            Passwort
-            <input
-              type="password"
-              placeholder="Mindestens 6 Zeichen"
-              {...registerRegister('password', {
-                required: 'Passwort ist erforderlich',
-                minLength: { value: 6, message: 'Mindestens 6 Zeichen' },
-              })}
-            />
-            {registerErrors.password && (
-              <span className="form-error">{registerErrors.password.message}</span>
-            )}
-          </label>
-          <label>
-            Geburtsdatum
-            <input
-              type="date"
-              {...registerRegister('birthDate', {
-                required: 'Geburtsdatum ist erforderlich',
-                pattern: {
-                  value: /^\d{4}-\d{2}-\d{2}$/,
-                  message: 'Format muss JJJJ-MM-TT sein',
-                },
-              })}
-            />
-            {registerErrors.birthDate && (
-              <span className="form-error">
-                {registerErrors.birthDate.message}
-              </span>
-            )}
-          </label>
-          <button
-            className="btn secondary full"
-            type="submit"
-            disabled={!registerValid || registerSubmitting}
-          >
-            {registerSubmitting ? 'Speichern...' : 'Profil anlegen'}
-          </button>
-          {registerSuccess && <p className="form-success">{registerSuccess}</p>}
-          {registerError && <p className="form-error">{registerError}</p>}
-          <p className="hint">Mit der Registrierung stimmst du den Regeln zu.</p>
-        </form>
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Anmeldung</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4" onSubmit={handleLoginSubmit(handleLogin)}>
+              <FormField label="E-Mail" error={loginErrors.email?.message}>
+                <Input
+                  type="email"
+                  placeholder="name@beispiel.de"
+                  {...registerLogin('email', { required: 'E-Mail ist erforderlich' })}
+                />
+              </FormField>
+              <FormField label="Passwort" error={loginErrors.password?.message}>
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  {...registerLogin('password', {
+                    required: 'Passwort ist erforderlich',
+                    minLength: { value: 3, message: 'Mindestens 3 Zeichen' },
+                  })}
+                />
+              </FormField>
+              <Button className="w-full" type="submit" disabled={!loginValid || loginSubmitting}>
+                {loginSubmitting ? 'Anmelden...' : 'Einloggen'}
+              </Button>
+              {loginSuccess && <p className="text-sm font-medium text-primary">{loginSuccess}</p>}
+              {loginError && <p className="text-sm font-medium text-destructive">{loginError}</p>}
+            </form>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Registrierung</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <form className="space-y-4" onSubmit={handleRegisterSubmit(handleRegister)}>
+              <FormField label="Vorname" error={registerErrors.firstName?.message}>
+                <Input
+                  type="text"
+                  placeholder="Vorname"
+                  {...registerRegister('firstName', {
+                    required: 'Vorname ist erforderlich',
+                  })}
+                />
+              </FormField>
+              <FormField label="Nachname" error={registerErrors.lastName?.message}>
+                <Input
+                  type="text"
+                  placeholder="Nachname"
+                  {...registerRegister('lastName', {
+                    required: 'Nachname ist erforderlich',
+                  })}
+                />
+              </FormField>
+              <FormField label="E-Mail" error={registerErrors.email?.message}>
+                <Input
+                  type="email"
+                  placeholder="name@beispiel.de"
+                  {...registerRegister('email', { required: 'E-Mail ist erforderlich' })}
+                />
+              </FormField>
+              <FormField label="Passwort" error={registerErrors.password?.message}>
+                <Input
+                  type="password"
+                  placeholder="Mindestens 6 Zeichen"
+                  {...registerRegister('password', {
+                    required: 'Passwort ist erforderlich',
+                    minLength: { value: 6, message: 'Mindestens 6 Zeichen' },
+                  })}
+                />
+              </FormField>
+              <FormField label="Geburtsdatum" error={registerErrors.birthDate?.message}>
+                <Input
+                  type="date"
+                  {...registerRegister('birthDate', {
+                    required: 'Geburtsdatum ist erforderlich',
+                    pattern: {
+                      value: /^\d{4}-\d{2}-\d{2}$/,
+                      message: 'Format muss JJJJ-MM-TT sein',
+                    },
+                  })}
+                />
+              </FormField>
+              <Button
+                variant="secondary"
+                className="w-full"
+                type="submit"
+                disabled={!registerValid || registerSubmitting}
+              >
+                {registerSubmitting ? 'Speichern...' : 'Profil anlegen'}
+              </Button>
+              {registerSuccess && (
+                <p className="text-sm font-medium text-primary">{registerSuccess}</p>
+              )}
+              {registerError && (
+                <p className="text-sm font-medium text-destructive">{registerError}</p>
+              )}
+            </form>
+          </CardContent>
+        </Card>
       </div>
     </section>
   )
 }
+
+const FormField = ({
+  label,
+  error,
+  children,
+}: {
+  label: string
+  error?: string
+  children: ReactNode
+}) => (
+  <label className="block space-y-1.5">
+    <span className="text-sm font-medium">{label}</span>
+    {children}
+    {error && <span className="text-xs text-destructive">{error}</span>}
+  </label>
+)
 
 export default UserPage

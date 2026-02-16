@@ -1,4 +1,3 @@
-import './App.css'
 import { RouterProvider, createBrowserRouter } from 'react-router'
 import { AuthProvider } from './auth/AuthContext'
 import SiteLayout from './layouts/SiteLayout'
